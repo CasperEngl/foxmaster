@@ -178,6 +178,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
               return (
                 <Tag
                   className={cn("col-start-2", {
+                    "font-black": node?.tag === "h1",
                     "mb-6 border-l-4 border-primary pl-4 text-lg uppercase leading-10 tracking-widest text-gray-400 dark:text-gray-200":
                       node?.tag === "h2",
                   })}
@@ -221,7 +222,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             case "quote": {
               return (
                 <blockquote
-                  className="col-start-2 dark:border-gray-700 dark:text-gray-300"
+                  className="col-start-2 border-l-4 border-primary pl-4 text-lg dark:text-white"
                   key={index}
                 >
                   {serializedChildren}
