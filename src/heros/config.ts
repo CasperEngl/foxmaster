@@ -1,6 +1,7 @@
 import type { Field } from "payload";
 
 import {
+  BlockquoteFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
@@ -46,6 +47,7 @@ export const hero: Field = {
           return [
             ...rootFeatures,
             HeadingFeature({ enabledHeadingSizes: ["h1", "h2", "h3", "h4"] }),
+            BlockquoteFeature(),
             FixedToolbarFeature(),
             InlineToolbarFeature(),
           ];
