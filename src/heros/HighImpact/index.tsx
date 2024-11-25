@@ -25,7 +25,7 @@ export const HighImpactHero: React.FC<Page["hero"]> = ({
       data-theme="dark"
     >
       <div className="container mb-8">
-        <div className="max-w-prose">
+        <div className="max-w-prose text-pretty">
           {richText && (
             <RichText
               className="mb-6"
@@ -38,7 +38,7 @@ export const HighImpactHero: React.FC<Page["hero"]> = ({
               {links.map(({ link }, i) => {
                 return (
                   <li key={i}>
-                    <CMSLink {...link} />
+                    <CMSLink {...link} size="glassmorphic" />
                   </li>
                 );
               })}
