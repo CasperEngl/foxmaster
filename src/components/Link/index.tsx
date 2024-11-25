@@ -1,7 +1,7 @@
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "src/utilities/cn";
 import Link from "next/link";
 import React from "react";
+import { cn } from "src/utilities/cn";
 
 import type { Page, Post } from "@/payload-types";
 
@@ -31,6 +31,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     reference,
     size: sizeFromProps,
     url,
+    ...rest
   } = props;
 
   const href =
@@ -52,7 +53,12 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   /* Ensure we don't break any styles set by richText */
   if (appearance === "inline") {
     return (
-      <Link className={cn(className)} href={href || url || ""} {...newTabProps}>
+      <Link
+        className={cn(className)}
+        href={href || url || ""}
+        {...newTabProps}
+        {...rest}
+      >
         {label && label}
         {children && children}
       </Link>
@@ -61,7 +67,12 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   return (
     <Button asChild className={className} size={size} variant={appearance}>
-      <Link className={cn(className)} href={href || url || ""} {...newTabProps}>
+      <Link
+        className={cn(className)}
+        href={href || url || ""}
+        {...newTabProps}
+        {...rest}
+      >
         {label && label}
         {children && children}
       </Link>

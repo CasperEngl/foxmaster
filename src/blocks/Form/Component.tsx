@@ -146,13 +146,6 @@ export const FormBlock: React.FC<
         />
       )}
       <FormProvider {...formMethods}>
-        {!isLoading && hasSubmitted && confirmationType === "message" && (
-          <RichText content={confirmationMessage} />
-        )}
-        {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-        {error && (
-          <div>{`${error.status || "500"}: ${error.message || ""}`}</div>
-        )}
         {!hasSubmitted && (
           <form id={formID} onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4 last:mb-0">
@@ -183,11 +176,23 @@ export const FormBlock: React.FC<
               type="submit"
               variant="glassmorphic"
               className="bg-background text-foreground"
+              disabled={isLoading}
             >
-              {submitButtonLabel}
+              {isLoading ? "Submitting..." : submitButtonLabel}
             </Button>
           </form>
         )}
+        {error ? (
+          <div className="mt-4">{`${error.status || "500"}: ${error.message || ""}`}</div>
+        ) : null}
+
+        {!isLoading && hasSubmitted && confirmationType === "message" ? (
+          <RichText
+            content={confirmationMessage}
+            enableProse={false}
+            enableGutter={false}
+          />
+        ) : null}
       </FormProvider>
     </div>
   );
