@@ -101,3 +101,13 @@ html[data-theme="dark"],
 html[data-theme="light"] {
   opacity: initial;
 }
+
+* {
+  scroll-margin-top: 96px;
+}
+
+@screen sm {
+  * {
+    scroll-margin-top: 128px;
+  }
+}
