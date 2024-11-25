@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { kebabCase } from "lodash-es";
 
 import type { Page } from "@/payload-types";
 
@@ -36,7 +37,11 @@ export const RenderBlocks: React.FC<{
 
             if (Block) {
               return (
-                <div key={index}>
+                <div
+                  key={index}
+                  id={block.blockName ? kebabCase(block.blockName) : undefined}
+                >
+                  {/* @ts-expect-error */}
                   <Block {...block} />
                 </div>
               );
