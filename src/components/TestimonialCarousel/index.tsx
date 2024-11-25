@@ -34,7 +34,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState(0);
   const [progress, setProgress] = useState(0);
-  const progressInterval = useRef<NodeJS.Timeout>(null);
+  const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const SLIDE_DURATION = 5000; // 5 seconds
   const PROGRESS_INTERVAL = 50; // Update progress every 50ms
 
@@ -48,11 +48,12 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
 
   const update = useCallback(
     (index: number) => {
+      if (!testimonials?.length) return;
       setDirection(index > currentIndex ? 1 : -1);
       setCurrentIndex(index);
       setProgress(0);
     },
-    [currentIndex],
+    [currentIndex, testimonials?.length],
   );
 
   useEffect(() => {
@@ -63,11 +64,11 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
 
     // Start new progress interval
     progressInterval.current = setInterval(() => {
-      if (!isPaused) {
+      if (!isPaused && testimonials?.length) {
         setProgress((prev) => {
           const newProgress = prev + PROGRESS_INTERVAL / SLIDE_DURATION;
           if (newProgress >= 1) {
-            const nextIndex = (currentIndex + 1) % (testimonials?.length ?? 0);
+            const nextIndex = (currentIndex + 1) % testimonials.length;
             update(nextIndex);
             return 0;
           }
@@ -84,7 +85,6 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   }, [currentIndex, isPaused, testimonials?.length, update]);
 
   useEffect(() => {
-    // Start with the first slide
     update(0);
   }, [update]);
 
