@@ -3,11 +3,28 @@
 import { ImageMedia } from "@/components/Media/ImageMedia";
 import RichText from "@/components/RichText";
 import type { TestimonialsBlock } from "@/payload-types";
-import { cn } from "@/utilities/cn";
-import React, { useEffect, useState, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 type TestimonialCarouselProps = {
   testimonials: TestimonialsBlock["testimonials"];
+};
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 1000 : -1000,
+    opacity: 0,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 1000 : -1000,
+    opacity: 0,
+  }),
 };
 
 export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
@@ -15,103 +32,151 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const progressInterval = useRef<NodeJS.Timeout>(null);
+  const SLIDE_DURATION = 5000; // 5 seconds
+  const PROGRESS_INTERVAL = 50; // Update progress every 50ms
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+  };
 
   const update = useCallback(
-    (index?: number) => {
-      if (typeof index === "number") {
-        setCurrentIndex(index);
-      } else {
-        setCurrentIndex((current) =>
-          current === (testimonials?.length ?? 0) - 1 ? 0 : current + 1,
-        );
-      }
+    (index: number) => {
+      setDirection(index > currentIndex ? 1 : -1);
+      setCurrentIndex(index);
+      setProgress(0);
     },
-    [testimonials?.length],
+    [currentIndex],
   );
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (!isPaused) {
-      interval = setInterval(() => {
-        update();
-      }, 5000); // Change slide every 5 seconds
+    // Clear existing interval
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current);
     }
-    return () => clearInterval(interval);
-  }, [isPaused, update]);
 
-  if (!testimonials?.length) return null;
+    // Start new progress interval
+    progressInterval.current = setInterval(() => {
+      if (!isPaused) {
+        setProgress((prev) => {
+          const newProgress = prev + PROGRESS_INTERVAL / SLIDE_DURATION;
+          if (newProgress >= 1) {
+            const nextIndex = (currentIndex + 1) % (testimonials?.length ?? 0);
+            update(nextIndex);
+            return 0;
+          }
+          return newProgress;
+        });
+      }
+    }, PROGRESS_INTERVAL);
+
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+      }
+    };
+  }, [currentIndex, isPaused, testimonials?.length, update]);
+
+  useEffect(() => {
+    // Start with the first slide
+    update(0);
+  }, [update]);
 
   return (
     <section
       className="relative flex flex-wrap"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {testimonials.map((testimonial, index) => {
-        const { quote, author, role, image } = testimonial;
-        const isActive = currentIndex === index;
+      <AnimatePresence initial={false} custom={direction}>
+        {testimonials?.map((testimonial, index) => {
+          const { quote, author, role, image } = testimonial;
+          const isActive = currentIndex === index;
 
-        return (
-          <article
-            key={index}
-            className={cn("w-full transition duration-300", {
-              hidden: !isActive,
-            })}
-          >
-            <div className="flex flex-wrap justify-center md:justify-start">
-              <div className="flex w-full flex-col-reverse flex-wrap md:w-3/4 md:flex-col">
-                {quote && (
-                  <blockquote className="relative mt-8 text-xl md:mt-4">
-                    <QuoteIcon />
-                    <div className="mb-6 mt-2">
-                      <RichText content={quote} />
-                    </div>
-                  </blockquote>
-                )}
+          if (!isActive) return null;
 
-                <div className="grid grid-cols-4 items-center justify-center md:justify-start">
-                  {image && (
-                    <div className="col-span-1">
-                      <figure className="relative mb-4 ml-2 sm:ml-4 md:ml-6">
-                        <div className="absolute left-0 top-0 z-0 -ml-2 -mt-2 aspect-square h-full w-full bg-gray-800 sm:-ml-4 sm:-mt-4 md:-ml-6 md:-mt-6" />
-                        <div className="absolute z-10">
-                          <ImageMedia resource={image} priority={false} />
-                        </div>
-                        <div className="absolute bottom-0 right-0 z-0 -mb-2 -mr-2 aspect-square h-full w-full bg-primary sm:-mb-4 sm:-mr-4 md:-mb-6 md:-mr-6" />
-                      </figure>
+          return (
+            <motion.article
+              key={index}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              // @ts-expect-error
+              className="w-full"
+            >
+              <div className="flex flex-col items-center justify-center gap-x-16 md:grid md:grid-cols-4 md:grid-rows-1 md:justify-start">
+                {image ? (
+                  <figure className="relative w-3/4 md:col-span-1">
+                    <div className="absolute -left-4 -top-4 z-0 aspect-square size-full bg-gray-800" />
+
+                    <div className="relative z-10 [&_img]:w-full">
+                      <ImageMedia resource={image} priority={false} />
                     </div>
-                  )}
-                  <div className="col-span-3">
-                    {author && (
-                      <h4 className="mb-1 max-w-md truncate text-xl font-bold leading-none md:text-2xl">
-                        {author}
-                      </h4>
-                    )}
-                    {role && <p className="text-gray-500">{role}</p>}
-                  </div>
+
+                    <div className="absolute -bottom-4 -right-4 z-0 aspect-square size-full bg-primary" />
+                  </figure>
+                ) : null}
+                <div className="md:col-span-3">
+                  {quote ? (
+                    <blockquote className="relative mt-8 text-xl md:mt-4">
+                      <QuoteIcon />
+                      <div className="mb-6 mt-2">
+                        <RichText
+                          content={quote}
+                          enableGutter={false}
+                          enableProse={false}
+                        />
+                      </div>
+                    </blockquote>
+                  ) : null}
+
+                  {author ? (
+                    <h4 className="mb-1 max-w-md truncate text-xl font-bold leading-none md:text-2xl">
+                      {author}
+                    </h4>
+                  ) : null}
+                  {role ? <p className="text-gray-500">{role}</p> : null}
                 </div>
               </div>
 
-              <div className="mt-4 flex w-full justify-center md:justify-start">
-                <div className="mt-2 flex w-2/3 gap-2">
+              <div className="mt-4 grid w-full grid-cols-4 justify-center gap-x-16 md:justify-start">
+                <div className="col-span-4 flex gap-2 md:col-span-3 md:col-start-2 md:w-2/3">
                   {testimonials.map((_, i) => (
                     <button
                       key={i}
-                      className="group relative mt-2 h-4 w-full md:mt-4 md:h-2"
+                      className="group relative h-4 w-full md:h-2"
                       onClick={() => update(i)}
                     >
-                      <div className="h-full w-full bg-gray-200 transition-all duration-150 group-hover:opacity-75" />
+                      <div className="size-full bg-gray-200 transition-all duration-150 group-hover:opacity-75" />
                       {currentIndex === i && (
-                        <div className="absolute top-0 h-full w-full origin-left bg-primary" />
+                        <div
+                          className="absolute top-0 size-full origin-left bg-primary"
+                          style={{
+                            transform: `scaleX(${progress})`,
+                            transformOrigin: "left center",
+                          }}
+                        />
                       )}
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
-          </article>
-        );
-      })}
+            </motion.article>
+          );
+        })}
+      </AnimatePresence>
     </section>
   );
 };
