@@ -17,7 +17,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
   const backgroundClasses = {
     default: "bg-white dark:bg-gray-800",
-    dark: "bg-gray-800 dark:bg-gray-900",
+    dark: "bg-gray-900",
   };
 
   return (

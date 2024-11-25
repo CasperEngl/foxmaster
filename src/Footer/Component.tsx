@@ -11,7 +11,7 @@ export async function Footer() {
   const footer: Footer = await getCachedGlobal("footer", 1)();
 
   return (
-    <footer className="bg-gray-950 text-white">
+    <footer className="bg-black text-white dark:bg-gray-950">
       <div className="container flex flex-col items-start gap-4 py-8">
         <Link className="flex items-center" href="/">
           <Logo />
