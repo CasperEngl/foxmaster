@@ -1,19 +1,17 @@
 import { getCachedGlobal } from "@/utilities/getGlobals";
 import Link from "next/link";
-import React from "react";
 
 import type { Footer } from "@/payload-types";
 
-import { ThemeSelector } from "@/providers/Theme/ThemeSelector";
-import { CMSLink } from "@/components/Link";
 import { Logo } from "@/components/Logo/Logo";
 import RichText from "@/components/RichText";
+import { ThemeSelector } from "@/providers/Theme/ThemeSelector";
 
 export async function Footer() {
   const footer: Footer = await getCachedGlobal("footer", 1)();
 
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-gray-950 text-white">
       <div className="container flex flex-col items-start gap-4 py-8">
         <Link className="flex items-center" href="/">
           <Logo />
