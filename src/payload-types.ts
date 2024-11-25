@@ -117,7 +117,7 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (ArchiveBlock | CallToActionBlock | ContentBlock | FormBlock | MediaBlock | TestimonialsBlock)[];
+  layout: (ArchiveBlock | CallToActionBlock | ContentBlock | FormBlock | MediaBlock)[];
   meta?: {
     title?: string | null;
     image?: (number | null) | Media;
@@ -373,10 +373,11 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  background?: ('default' | 'dark') | null;
   columns?:
     | {
-        icon?: ('none' | 'star' | 'check' | 'info' | 'warning') | null;
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        contentType?: ('richText' | 'testimonials') | null;
         richText?: {
           root: {
             type: string;
@@ -392,24 +393,45 @@ export interface ContentBlock {
           };
           [k: string]: unknown;
         } | null;
-        enableLink?: boolean | null;
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-          appearance?: ('default' | 'outline' | 'glassmorphic') | null;
-        };
+        testimonials?: TestimonialsBlock[] | null;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  testimonials?:
+    | {
+        quote: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        author: string;
+        role?: string | null;
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonials';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -613,38 +635,6 @@ export interface MediaBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TestimonialsBlock".
- */
-export interface TestimonialsBlock {
-  testimonials?:
-    | {
-        quote: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        };
-        author: string;
-        role?: string | null;
-        image: number | Media;
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'testimonials';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -832,22 +822,31 @@ export interface PagesSelect<T extends boolean = true> {
         content?:
           | T
           | {
+              background?: T;
               columns?:
                 | T
                 | {
-                    icon?: T;
                     size?: T;
+                    contentType?: T;
                     richText?: T;
-                    enableLink?: T;
-                    link?:
+                    testimonials?:
                       | T
                       | {
-                          type?: T;
-                          newTab?: T;
-                          reference?: T;
-                          url?: T;
-                          label?: T;
-                          appearance?: T;
+                          testimonials?:
+                            | T
+                            | {
+                                testimonials?:
+                                  | T
+                                  | {
+                                      quote?: T;
+                                      author?: T;
+                                      role?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
                         };
                     id?: T;
                   };
@@ -867,21 +866,6 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               media?: T;
-              id?: T;
-              blockName?: T;
-            };
-        testimonials?:
-          | T
-          | {
-              testimonials?:
-                | T
-                | {
-                    quote?: T;
-                    author?: T;
-                    role?: T;
-                    image?: T;
-                    id?: T;
-                  };
               id?: T;
               blockName?: T;
             };
@@ -1277,21 +1261,21 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
+  contactInfo?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1323,20 +1307,7 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
+  contactInfo?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

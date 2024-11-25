@@ -1,6 +1,9 @@
 import type { GlobalConfig } from "payload";
 
-import { link } from "@/fields/link";
+import {
+  FixedToolbarFeature,
+  lexicalEditor,
+} from "@payloadcms/richtext-lexical";
 import { revalidateFooter } from "./hooks/revalidateFooter";
 
 export const Footer: GlobalConfig = {
@@ -10,14 +13,14 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
-      name: "navItems",
-      type: "array",
-      fields: [
-        link({
-          appearances: false,
-        }),
-      ],
-      maxRows: 6,
+      name: "contactInfo",
+      label: "Contact Info",
+      type: "richText",
+      editor: lexicalEditor({
+        features: ({ rootFeatures }) => {
+          return [...rootFeatures, FixedToolbarFeature()];
+        },
+      }),
     },
   ],
   hooks: {

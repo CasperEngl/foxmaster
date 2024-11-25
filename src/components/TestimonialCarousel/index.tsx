@@ -34,9 +34,9 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState(0);
   const [progress, setProgress] = useState(0);
-  const progressInterval = useRef<NodeJS.Timeout | null>(null);
-  const SLIDE_DURATION = 5000; // 5 seconds
-  const PROGRESS_INTERVAL = 50; // Update progress every 50ms
+  const SLIDE_DURATION = 5000;
+  const animationFrameRef = useRef<number>(-1);
+  const lastTimeRef = useRef<number>(-1);
 
   const handleMouseEnter = () => {
     setIsPaused(true);
@@ -49,44 +49,54 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   const update = useCallback(
     (index: number) => {
       if (!testimonials?.length) return;
-      setDirection(index > currentIndex ? 1 : -1);
+
+      if (currentIndex === testimonials.length - 1 && index === 0) {
+        setDirection(1);
+      } else {
+        setDirection(index > currentIndex ? 1 : -1);
+      }
+
       setCurrentIndex(index);
       setProgress(0);
+      lastTimeRef.current = 0;
     },
     [currentIndex, testimonials?.length],
   );
 
   useEffect(() => {
-    // Clear existing interval
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
-    }
+    const animate = (timestamp: number) => {
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = timestamp;
+      }
 
-    // Start new progress interval
-    progressInterval.current = setInterval(() => {
+      const elapsed = timestamp - lastTimeRef.current;
+
       if (!isPaused && testimonials?.length) {
         setProgress((prev) => {
-          const newProgress = prev + PROGRESS_INTERVAL / SLIDE_DURATION;
+          const newProgress = prev + elapsed / SLIDE_DURATION;
+
           if (newProgress >= 1) {
             const nextIndex = (currentIndex + 1) % testimonials.length;
             update(nextIndex);
             return 0;
           }
+
           return newProgress;
         });
       }
-    }, PROGRESS_INTERVAL);
+
+      lastTimeRef.current = timestamp;
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
   }, [currentIndex, isPaused, testimonials?.length, update]);
-
-  useEffect(() => {
-    update(0);
-  }, [update]);
 
   return (
     <section
@@ -94,7 +104,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <AnimatePresence initial={false} custom={direction}>
+      <AnimatePresence initial={false} custom={direction} mode="popLayout">
         {testimonials?.map((testimonial, index) => {
           const { quote, author, role, image } = testimonial;
           const isActive = currentIndex === index;
@@ -110,27 +120,27 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
               animate="center"
               exit="exit"
               transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 },
+                x: { type: "spring", stiffness: 100, damping: 30 },
+                opacity: { duration: 1 },
               }}
               // @ts-expect-error
               className="w-full"
             >
               <div className="flex flex-col items-center justify-center gap-x-16 md:grid md:grid-cols-4 md:grid-rows-1 md:justify-start">
                 {image ? (
-                  <figure className="relative w-3/4 md:col-span-1">
-                    <div className="absolute -left-4 -top-4 z-0 aspect-square size-full bg-gray-800" />
-
-                    <div className="relative z-10 [&_img]:w-full">
-                      <ImageMedia resource={image} priority={false} />
+                  <figure className="w-3/4 pl-4 md:col-span-1 md:w-full">
+                    <div className="relative">
+                      <div className="absolute -left-4 -top-4 z-0 aspect-square size-full bg-gray-800" />
+                      <div className="relative z-10 [&_img]:w-full">
+                        <ImageMedia resource={image} priority={false} />
+                      </div>
+                      <div className="absolute -bottom-4 -right-4 z-0 aspect-square size-full bg-primary" />
                     </div>
-
-                    <div className="absolute -bottom-4 -right-4 z-0 aspect-square size-full bg-primary" />
                   </figure>
                 ) : null}
                 <div className="md:col-span-3">
                   {quote ? (
-                    <blockquote className="relative mt-8 text-xl md:mt-4">
+                    <blockquote className="relative mt-8 text-pretty text-xl md:mt-4 md:w-2/3">
                       <QuoteIcon />
                       <div className="mb-6 mt-2">
                         <RichText

@@ -35,7 +35,7 @@ export default async function RootLayout({
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body className="dark:bg-gray-800">
+      <body className="overflow-x-clip dark:bg-gray-800">
         <Providers>
           <AdminBar
             adminBarProps={{

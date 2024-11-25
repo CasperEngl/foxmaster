@@ -116,11 +116,11 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             case "mediaBlock":
               return (
                 <MediaBlock
-                  className="col-span-3 col-start-1"
+                  className="col-span-3 col-start-1 dark:bg-gray-800"
                   imgClassName="m-0"
                   key={index}
                   {...block}
-                  captionClassName="mx-auto max-w-[48rem]"
+                  captionClassName="mx-auto max-w-[48rem] dark:text-gray-300"
                   enableGutter={false}
                   disableInnerContainer={true}
                 />
@@ -128,14 +128,18 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             case "banner":
               return (
                 <BannerBlock
-                  className="col-start-2 mb-4"
+                  className="col-start-2 mb-4 dark:bg-gray-900"
                   key={index}
                   {...block}
                 />
               );
             case "code":
               return (
-                <CodeBlock className="col-start-2" key={index} {...block} />
+                <CodeBlock
+                  className="col-start-2 dark:bg-gray-900 dark:text-gray-100"
+                  key={index}
+                  {...block}
+                />
               );
             default:
               return null;
@@ -147,7 +151,10 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             }
             case "paragraph": {
               return (
-                <p className="col-start-2 text-gray-400" key={index}>
+                <p
+                  className="col-start-2 max-w-prose text-gray-400 dark:text-gray-300"
+                  key={index}
+                >
                   {serializedChildren}
                 </p>
               );
@@ -157,7 +164,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
               return (
                 <Tag
                   className={cn("col-start-2", {
-                    "mb-6 border-l-4 border-primary pl-4 text-lg uppercase leading-10 tracking-widest text-gray-400":
+                    "mb-6 border-l-4 border-primary pl-4 text-lg uppercase leading-10 tracking-widest text-gray-400 dark:text-gray-200":
                       node?.tag === "h2",
                   })}
                   key={index}
@@ -199,7 +206,10 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
             }
             case "quote": {
               return (
-                <blockquote className="col-start-2" key={index}>
+                <blockquote
+                  className="col-start-2 dark:border-gray-700 dark:text-gray-300"
+                  key={index}
+                >
                   {serializedChildren}
                 </blockquote>
               );
@@ -214,6 +224,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
                   reference={fields.doc as any}
                   type={fields.linkType === "internal" ? "reference" : "custom"}
                   url={fields.url}
+                  className="dark:text-blue-400"
                 >
                   {serializedChildren}
                 </CMSLink>

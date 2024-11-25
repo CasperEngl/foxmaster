@@ -7,7 +7,7 @@ import {
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
 
-import { link } from "@/fields/link";
+import { Testimonials } from "@/blocks/Testimonials/config";
 
 // Add icon options
 const iconOptions = [
@@ -33,16 +33,19 @@ const iconOptions = [
   },
 ];
 
-const columnFields: Field[] = [
+// Add background options
+const backgroundOptions = [
   {
-    name: "icon",
-    type: "select",
-    defaultValue: "none",
-    options: iconOptions,
-    admin: {
-      description: "Select an icon to display before the content",
-    },
+    label: "Default",
+    value: "default",
   },
+  {
+    label: "Dark",
+    value: "dark",
+  },
+];
+
+const columnFields: Field[] = [
   {
     name: "size",
     type: "select",
@@ -67,6 +70,21 @@ const columnFields: Field[] = [
     ],
   },
   {
+    name: "contentType",
+    type: "select",
+    options: [
+      {
+        label: "Rich Text",
+        value: "richText",
+      },
+      {
+        label: "Testimonials",
+        value: "testimonials",
+      },
+    ],
+    defaultValue: "richText",
+  },
+  {
     name: "richText",
     type: "richText",
     editor: lexicalEditor({
@@ -80,24 +98,39 @@ const columnFields: Field[] = [
       },
     }),
     label: false,
-  },
-  {
-    name: "enableLink",
-    type: "checkbox",
-  },
-  link({
-    overrides: {
-      admin: {
-        condition: (_, { enableLink }) => Boolean(enableLink),
+    admin: {
+      condition: (_, siblingData) => {
+        console.log("rich text data", siblingData);
+        return siblingData.contentType === "richText";
       },
     },
-  }),
+  },
+  {
+    name: "testimonials",
+    type: "blocks",
+    blocks: [Testimonials],
+    admin: {
+      condition: (_, siblingData) => {
+        console.log("testimonials data", siblingData);
+        return siblingData.contentType === "testimonials";
+      },
+    },
+  },
 ];
 
 export const Content: Block = {
   slug: "content",
   interfaceName: "ContentBlock",
   fields: [
+    {
+      name: "background",
+      type: "select",
+      defaultValue: "default",
+      options: backgroundOptions,
+      admin: {
+        description: "Choose a background style for this content block",
+      },
+    },
     {
       name: "columns",
       type: "array",
