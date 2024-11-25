@@ -134,6 +134,7 @@ export const FormBlock: React.FC<
                 form={formID}
                 type="submit"
                 variant="glassmorphic"
+                size="glassmorphic"
                 className="bg-background text-foreground"
                 disabled={mutation.isPending}
               >
