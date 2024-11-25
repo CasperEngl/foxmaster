@@ -1,37 +1,12 @@
 import type { Block, Field } from "payload";
 
+import { testimonialFields } from "@/fields/testimonials";
 import {
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
-
-import { Testimonials } from "@/blocks/Testimonials/config";
-
-// Add icon options
-const iconOptions = [
-  {
-    label: "None",
-    value: "none",
-  },
-  {
-    label: "Star",
-    value: "star",
-  },
-  {
-    label: "Check",
-    value: "check",
-  },
-  {
-    label: "Info",
-    value: "info",
-  },
-  {
-    label: "Warning",
-    value: "warning",
-  },
-];
 
 // Add background options
 const backgroundOptions = [
@@ -81,6 +56,10 @@ const columnFields: Field[] = [
         label: "Testimonials",
         value: "testimonials",
       },
+      {
+        label: "Form",
+        value: "form",
+      },
     ],
     defaultValue: "richText",
   },
@@ -99,21 +78,25 @@ const columnFields: Field[] = [
     }),
     label: false,
     admin: {
-      condition: (_, siblingData) => {
-        console.log("rich text data", siblingData);
-        return siblingData.contentType === "richText";
-      },
+      condition: (_, siblingData) => siblingData.contentType === "richText",
     },
   },
   {
     name: "testimonials",
-    type: "blocks",
-    blocks: [Testimonials],
+    type: "array",
+    minRows: 1,
+    fields: testimonialFields,
     admin: {
-      condition: (_, siblingData) => {
-        console.log("testimonials data", siblingData);
-        return siblingData.contentType === "testimonials";
-      },
+      condition: (_, siblingData) => siblingData.contentType === "testimonials",
+    },
+  },
+  {
+    name: "form",
+    type: "relationship",
+    relationTo: "forms",
+    required: true,
+    admin: {
+      condition: (_, siblingData) => siblingData.contentType === "form",
     },
   },
 ];

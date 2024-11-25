@@ -1,30 +1,20 @@
 import RichText from "@/components/RichText";
-import { match, P } from "ts-pattern";
 import { AlertTriangle, Check, Info, Star } from "lucide-react";
 import React from "react";
 
 import type { ContentBlock as ContentBlockProps } from "@/payload-types";
 
-import { cn } from "@/utilities/cn";
-import { CMSLink } from "../../components/Link";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
+import { cn } from "@/utilities/cn";
 
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   const { columns, background } = props;
 
   const colsSpanClasses = {
-    full: "12",
-    half: "6",
-    oneThird: "4",
-    twoThirds: "8",
-  };
-
-  const iconMap = {
-    none: null,
-    star: <Star className="mb-4 h-6 w-6" />,
-    check: <Check className="mb-4 h-6 w-6" />,
-    info: <Info className="mb-4 h-6 w-6" />,
-    warning: <AlertTriangle className="mb-4 h-6 w-6" />,
+    full: "lg:col-span-12",
+    half: "lg:col-span-6",
+    oneThird: "lg:col-span-4",
+    twoThirds: "lg:col-span-8",
   };
 
   const backgroundClasses = {
@@ -42,42 +32,30 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
           {columns &&
             columns.length > 0 &&
             columns.map((col, index) => {
-              const { size, content } = col;
+              const { size, richText, testimonials } = col;
 
               return (
                 <div
                   className={cn(
-                    `col-span-4 lg:col-span-${colsSpanClasses[size!]}`,
+                    `col-span-4`,
+                    size ? colsSpanClasses[size] : null,
                     {
                       "md:col-span-2": size !== "full",
                     },
                   )}
                   key={index}
                 >
-                  {content?.map((item, idx) => {
-                    return match(item)
-                      .with(
-                        {
-                          richText: P.select("richText"),
-                        },
-                        ({ richText }) => (
-                          <RichText
-                            key={item.id}
-                            content={richText}
-                            enableGutter={false}
-                          />
-                        ),
-                      )
-                      .with(
-                        {
-                          testimonial: P.select("testimonials"),
-                        },
-                        ({ testimonials }) => (
-                          <TestimonialCarousel testimonials={testimonials} />
-                        ),
-                      )
-                      .exhaustive();
-                  })}
+                  {richText ? (
+                    <RichText
+                      key={col.id}
+                      content={richText}
+                      enableGutter={false}
+                    />
+                  ) : null}
+
+                  {testimonials ? (
+                    <TestimonialCarousel testimonials={testimonials} />
+                  ) : null}
                 </div>
               );
             })}

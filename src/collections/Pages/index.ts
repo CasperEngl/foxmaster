@@ -21,7 +21,6 @@ import {
   PreviewField,
 } from "@payloadcms/plugin-seo/fields";
 import { getServerSideURL } from "@/utilities/getURL";
-import { Testimonials } from "@/blocks/Testimonials/config";
 
 export const Pages: CollectionConfig = {
   slug: "pages",

@@ -169,7 +169,6 @@ export const home: RequiredDataFromCollectionSlug<"pages"> = {
           size: "full",
         },
         {
-          enableLink: false,
           richText: {
             root: {
               type: "root",
@@ -254,7 +253,6 @@ export const home: RequiredDataFromCollectionSlug<"pages"> = {
           size: "oneThird",
         },
         {
-          enableLink: false,
           richText: {
             root: {
               type: "root",
@@ -307,7 +305,6 @@ export const home: RequiredDataFromCollectionSlug<"pages"> = {
           size: "oneThird",
         },
         {
-          enableLink: false,
           richText: {
             root: {
               type: "root",
@@ -360,7 +357,6 @@ export const home: RequiredDataFromCollectionSlug<"pages"> = {
           size: "oneThird",
         },
         {
-          enableLink: false,
           richText: {
             root: {
               type: "root",
@@ -445,7 +441,6 @@ export const home: RequiredDataFromCollectionSlug<"pages"> = {
           size: "oneThird",
         },
         {
-          enableLink: false,
           richText: {
             root: {
               type: "root",

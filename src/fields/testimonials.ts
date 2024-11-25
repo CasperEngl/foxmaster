@@ -1,4 +1,4 @@
-import type { Block, Field } from "payload";
+import type { Field } from "payload";
 
 import {
   FixedToolbarFeature,
@@ -7,7 +7,7 @@ import {
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
 
-const testimonialFields: Field[] = [
+export const testimonialFields: Field[] = [
   {
     name: "quote",
     type: "richText",
@@ -40,21 +40,3 @@ const testimonialFields: Field[] = [
     required: true,
   },
 ];
-
-export const Testimonials: Block = {
-  slug: "testimonials",
-  interfaceName: "TestimonialsBlock",
-  fields: [
-    {
-      name: "testimonials",
-      type: "array",
-      minRows: 1,
-      maxRows: 3,
-      fields: testimonialFields,
-      admin: {
-        description:
-          "Add up to 3 testimonials that will be displayed in a grid",
-      },
-    },
-  ],
-};

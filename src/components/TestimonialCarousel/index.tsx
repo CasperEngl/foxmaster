@@ -2,12 +2,12 @@
 
 import { ImageMedia } from "@/components/Media/ImageMedia";
 import RichText from "@/components/RichText";
-import type { TestimonialsBlock } from "@/payload-types";
+import { ContentBlock } from "@/payload-types";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
 
 type TestimonialCarouselProps = {
-  testimonials: TestimonialsBlock["testimonials"];
+  testimonials: NonNullable<ContentBlock["columns"]>[number]["testimonials"];
 };
 
 const slideVariants = {
@@ -28,7 +28,7 @@ const slideVariants = {
 };
 
 export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
-  testimonials = [],
+  testimonials,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);

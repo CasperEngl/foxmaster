@@ -50,9 +50,7 @@ export const seed = async ({
   for (const global of globals) {
     await payload.updateGlobal({
       slug: global,
-      data: {
-        navItems: [],
-      },
+      data: {},
     });
   }
 
@@ -313,31 +311,93 @@ export const seed = async ({
   await payload.updateGlobal({
     slug: "footer",
     data: {
-      navItems: [
-        {
-          link: {
-            type: "custom",
-            label: "Admin",
-            url: "/admin",
-          },
+      contactInfo: {
+        root: {
+          type: "root",
+          children: [
+            {
+              type: "heading",
+              children: [
+                {
+                  type: "text",
+                  detail: 0,
+                  format: 0,
+                  mode: "normal",
+                  style: "",
+                  text: "Contact Us",
+                  version: 1,
+                },
+              ],
+              direction: "ltr",
+              format: "",
+              indent: 0,
+              tag: "h2",
+              version: 1,
+            },
+            {
+              type: "paragraph",
+              children: [
+                {
+                  type: "text",
+                  detail: 0,
+                  format: 0,
+                  mode: "normal",
+                  style: "",
+                  text: "Address: 123 Main St, Anytown, USA",
+                  version: 1,
+                },
+              ],
+              direction: "ltr",
+              format: "",
+              indent: 0,
+              textFormat: 0,
+              version: 1,
+            },
+            {
+              type: "paragraph",
+              children: [
+                {
+                  type: "text",
+                  detail: 0,
+                  format: 0,
+                  mode: "normal",
+                  style: "",
+                  text: "Phone: +1 (555) 123-4567",
+                  version: 1,
+                },
+              ],
+              direction: "ltr",
+              format: "",
+              indent: 0,
+              textFormat: 0,
+              version: 1,
+            },
+            {
+              type: "paragraph",
+              children: [
+                {
+                  type: "text",
+                  detail: 0,
+                  format: 0,
+                  mode: "normal",
+                  style: "",
+                  text: "Email: [info@example.com](mailto:info@example.com)",
+                  version: 1,
+                },
+              ],
+              direction: "ltr",
+              format: "",
+              indent: 0,
+              textFormat: 0,
+              version: 1,
+            },
+          ],
+          direction: "ltr",
+          format: "",
+          indent: 0,
+          version: 1,
         },
-        {
-          link: {
-            type: "custom",
-            label: "Source Code",
-            newTab: true,
-            url: "https://github.com/payloadcms/payload/tree/main/templates/website",
-          },
-        },
-        {
-          link: {
-            type: "custom",
-            label: "Payload",
-            newTab: true,
-            url: "https://payloadcms.com/",
-          },
-        },
-      ],
+      },
     },
   });
 
