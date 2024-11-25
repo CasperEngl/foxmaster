@@ -2,12 +2,12 @@
 
 import { ImageMedia } from "@/components/Media/ImageMedia";
 import RichText from "@/components/RichText";
-import { ContentBlock } from "@/payload-types";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { TestimonialsBlock } from "@/payload-types";
 
 type TestimonialCarouselProps = {
-  testimonials: NonNullable<ContentBlock["columns"]>[number]["testimonials"];
+  testimonials: TestimonialsBlock["testimonials"];
 };
 
 const slideVariants = {

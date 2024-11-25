@@ -137,7 +137,7 @@ export const FormBlock: React.FC<
   );
 
   return (
-    <div className="container lg:max-w-[48rem]">
+    <div className="">
       {enableIntro && introContent && !hasSubmitted && (
         <RichText
           className="mb-8 lg:mb-12"
@@ -145,47 +145,50 @@ export const FormBlock: React.FC<
           enableGutter={false}
         />
       )}
-      <div className="rounded-[0.8rem] border border-border p-4 lg:p-6">
-        <FormProvider {...formMethods}>
-          {!isLoading && hasSubmitted && confirmationType === "message" && (
-            <RichText content={confirmationMessage} />
-          )}
-          {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-          {error && (
-            <div>{`${error.status || "500"}: ${error.message || ""}`}</div>
-          )}
-          {!hasSubmitted && (
-            <form id={formID} onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4 last:mb-0">
-                {formFromProps &&
-                  formFromProps.fields &&
-                  formFromProps.fields?.map((field, index) => {
-                    const Field: React.FC<any> = fields?.[field.blockType];
-                    if (Field) {
-                      return (
-                        <div className="mb-6 last:mb-0" key={index}>
-                          <Field
-                            form={formFromProps}
-                            {...field}
-                            {...formMethods}
-                            control={control}
-                            errors={errors}
-                            register={register}
-                          />
-                        </div>
-                      );
-                    }
-                    return null;
-                  })}
-              </div>
+      <FormProvider {...formMethods}>
+        {!isLoading && hasSubmitted && confirmationType === "message" && (
+          <RichText content={confirmationMessage} />
+        )}
+        {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
+        {error && (
+          <div>{`${error.status || "500"}: ${error.message || ""}`}</div>
+        )}
+        {!hasSubmitted && (
+          <form id={formID} onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4 last:mb-0">
+              {formFromProps &&
+                formFromProps.fields &&
+                formFromProps.fields?.map((field, index) => {
+                  const Field: React.FC<any> = fields?.[field.blockType];
+                  if (Field) {
+                    return (
+                      <div className="mb-6 last:mb-0" key={index}>
+                        <Field
+                          form={formFromProps}
+                          {...field}
+                          {...formMethods}
+                          control={control}
+                          errors={errors}
+                          register={register}
+                        />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+            </div>
 
-              <Button form={formID} type="submit" variant="default">
-                {submitButtonLabel}
-              </Button>
-            </form>
-          )}
-        </FormProvider>
-      </div>
+            <Button
+              form={formID}
+              type="submit"
+              variant="glassmorphic"
+              className="bg-background text-foreground"
+            >
+              {submitButtonLabel}
+            </Button>
+          </form>
+        )}
+      </FormProvider>
     </div>
   );
 };

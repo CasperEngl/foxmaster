@@ -1,10 +1,8 @@
 import RichText from "@/components/RichText";
-import { AlertTriangle, Check, Info, Star } from "lucide-react";
 import React from "react";
 
 import type { ContentBlock as ContentBlockProps } from "@/payload-types";
 
-import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { cn } from "@/utilities/cn";
 
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
@@ -32,7 +30,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
           {columns &&
             columns.length > 0 &&
             columns.map((col, index) => {
-              const { size, richText, testimonials } = col;
+              const { size, richText } = col;
 
               return (
                 <div
@@ -51,10 +49,6 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                       content={richText}
                       enableGutter={false}
                     />
-                  ) : null}
-
-                  {testimonials ? (
-                    <TestimonialCarousel testimonials={testimonials} />
                   ) : null}
                 </div>
               );

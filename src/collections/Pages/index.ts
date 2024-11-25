@@ -9,6 +9,7 @@ import { FormBlock } from "../../blocks/Form/config";
 import { MediaBlock } from "../../blocks/MediaBlock/config";
 import { hero } from "@/heros/config";
 import { slugField } from "@/fields/slug";
+import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/config";
 import { populatePublishedAt } from "../../hooks/populatePublishedAt";
 import { generatePreviewPath } from "../../utilities/generatePreviewPath";
 import { revalidatePage } from "./hooks/revalidatePage";
@@ -76,7 +77,14 @@ export const Pages: CollectionConfig = {
             {
               name: "layout",
               type: "blocks",
-              blocks: [Archive, CallToAction, Content, FormBlock, MediaBlock],
+              blocks: [
+                Archive,
+                CallToAction,
+                Content,
+                FormBlock,
+                MediaBlock,
+                TestimonialsBlock,
+              ],
               required: true,
             },
           ],

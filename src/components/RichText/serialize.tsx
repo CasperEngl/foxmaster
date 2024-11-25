@@ -8,7 +8,6 @@ import {
   DefaultNodeTypes,
   SerializedBlockNode,
 } from "@payloadcms/richtext-lexical";
-import type { BannerBlock as BannerBlockProps } from "@/payload-types";
 
 import {
   IS_BOLD,
@@ -20,15 +19,25 @@ import {
   IS_UNDERLINE,
 } from "./nodeFormat";
 import type {
+  BannerBlock as BannerBlockProps,
   CallToActionBlock as CTABlockProps,
+  FormBlock as FormBlockProps,
   MediaBlock as MediaBlockProps,
+  TestimonialsBlock as TestimonialsBlockProps,
 } from "@/payload-types";
 import { cn } from "@/utilities/cn";
+import { FormBlock } from "@/blocks/Form/Component";
+import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
 
 export type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<
-      CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps
+      | CTABlockProps
+      | MediaBlockProps
+      | BannerBlockProps
+      | CodeBlockProps
+      | FormBlockProps
+      | TestimonialsBlockProps
     >;
 
 type Props = {
@@ -141,6 +150,11 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
                   {...block}
                 />
               );
+            case "formBlock":
+              // @ts-expect-error
+              return <FormBlock key={index} {...block} />;
+            case "testimonials":
+              return <TestimonialsBlock key={index} {...block} />;
             default:
               return null;
           }

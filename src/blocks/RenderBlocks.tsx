@@ -7,6 +7,7 @@ import { CallToActionBlock } from "@/blocks/CallToAction/Component";
 import { ContentBlock } from "@/blocks/Content/Component";
 import { FormBlock } from "@/blocks/Form/Component";
 import { MediaBlock } from "@/blocks/MediaBlock/Component";
+import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -14,6 +15,7 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  testimonials: TestimonialsBlock,
 };
 
 export const RenderBlocks: React.FC<{
@@ -35,7 +37,6 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div key={index}>
-                  {/* @ts-expect-error */}
                   <Block {...block} />
                 </div>
               );

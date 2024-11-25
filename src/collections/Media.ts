@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import {
+  BlocksFeature,
   FixedToolbarFeature,
   InlineToolbarFeature,
   lexicalEditor,
@@ -10,6 +11,7 @@ import { fileURLToPath } from "url";
 
 import { anyone } from "../access/anyone";
 import { authenticated } from "../access/authenticated";
+import { FormBlock } from "@/blocks/Form/config";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);

@@ -1,4 +1,4 @@
-import type { Field } from "payload";
+import type { Block, Field } from "payload";
 
 import {
   FixedToolbarFeature,
@@ -40,3 +40,18 @@ export const testimonialFields: Field[] = [
     required: true,
   },
 ];
+
+export const TestimonialsBlock: Block = {
+  slug: "testimonials",
+  interfaceName: "TestimonialsBlock",
+  fields: [
+    {
+      name: "testimonials",
+      type: "array",
+      fields: testimonialFields,
+      admin: {
+        description: "Add testimonials that will be displayed in a carousel",
+      },
+    },
+  ],
+};
