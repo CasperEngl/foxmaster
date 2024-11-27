@@ -38,5 +38,5 @@ export const buildInitialFormState = (fields: FormFieldBlock[]) => {
         [field.name]: "",
       };
     }
-  }, {});
+  }, {} as any);
 };
