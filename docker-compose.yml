@@ -1,22 +1,20 @@
-version: "3"
-
 services:
-  payload:
-    image: node:18-alpine
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
-    env_file:
-      - .env
+  # payload:
+  #   image: oven/bun:1
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - .:/home/node/app
+  #     - node_modules:/home/node/app/node_modules
+  #   working_dir: /home/node/app/
+  #   command: sh -c "bun install && bun run dev"
+  #   depends_on:
+  #     - mongo
+  #   env_file:
+  #     - .env.local
 
   mongo:
-    image: mongo:latest
+    image: mongo:8
     ports:
       - "27017:27017"
     command:
@@ -25,6 +23,12 @@ services:
       - data:/data/db
     logging:
       driver: none
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
   data:
