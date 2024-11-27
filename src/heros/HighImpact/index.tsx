@@ -21,6 +21,7 @@ export const HighImpactHero: React.FC<Page["hero"]> = ({
 
   return (
     <div
+      id="hero"
       className="relative -mt-48 flex items-center justify-center text-white sm:-mt-[10.125rem]"
       data-theme="dark"
     >
