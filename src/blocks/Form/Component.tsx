@@ -73,7 +73,7 @@ export const FormBlock: React.FC<
         method: "POST",
       });
 
-      const res = await req.json();
+      const res = (await req.json()) as any;
 
       if (req.status >= 400) {
         throw new Error(res.errors?.[0]?.message || "Internal Server Error");
