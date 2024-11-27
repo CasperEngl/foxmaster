@@ -1,4 +1,10 @@
-FROM node:18.8-alpine as base
+FROM node:18-alpine as base
+
+RUN curl -fsSL https://bun.sh/install | bash
+
+ENV PATH="/root/.bun/bin:$PATH"
+ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
 
 FROM base as builder
 
@@ -6,8 +12,8 @@ WORKDIR /home/node/app
 COPY package*.json ./
 
 COPY . .
-RUN yarn install
-RUN yarn build
+RUN bun install
+RUN bun build
 
 FROM base as runtime
 
@@ -17,7 +23,7 @@ WORKDIR /home/node/app
 COPY package*.json  ./
 COPY yarn.lock ./
 
-RUN yarn install --production
+RUN bun install --production
 
 EXPOSE 3000
 
