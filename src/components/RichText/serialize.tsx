@@ -1,14 +1,26 @@
+import { AccordionBlock } from "@/blocks/Accordion/Component";
 import { BannerBlock } from "@/blocks/Banner/Component";
 import { CallToActionBlock } from "@/blocks/CallToAction/Component";
 import { CodeBlock, CodeBlockProps } from "@/blocks/Code/Component";
 import { MediaBlock } from "@/blocks/MediaBlock/Component";
-import React, { Fragment, JSX } from "react";
 import { CMSLink } from "@/components/Link";
 import {
   DefaultNodeTypes,
   SerializedBlockNode,
 } from "@payloadcms/richtext-lexical";
+import React, { Fragment, JSX } from "react";
 
+import { FormBlock } from "@/blocks/Form/Component";
+import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
+import type {
+  AccordionBlock as AccordionBlockProps,
+  BannerBlock as BannerBlockProps,
+  CallToActionBlock as CTABlockProps,
+  FormBlock as FormBlockProps,
+  MediaBlock as MediaBlockProps,
+  TestimonialsBlock as TestimonialsBlockProps,
+} from "@/payload-types";
+import { cn } from "@/utilities/cn";
 import {
   IS_BOLD,
   IS_CODE,
@@ -18,16 +30,6 @@ import {
   IS_SUPERSCRIPT,
   IS_UNDERLINE,
 } from "./nodeFormat";
-import type {
-  BannerBlock as BannerBlockProps,
-  CallToActionBlock as CTABlockProps,
-  FormBlock as FormBlockProps,
-  MediaBlock as MediaBlockProps,
-  TestimonialsBlock as TestimonialsBlockProps,
-} from "@/payload-types";
-import { cn } from "@/utilities/cn";
-import { FormBlock } from "@/blocks/Form/Component";
-import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
 
 export type NodeTypes =
   | DefaultNodeTypes
@@ -38,6 +40,7 @@ export type NodeTypes =
       | CodeBlockProps
       | FormBlockProps
       | TestimonialsBlockProps
+      | AccordionBlockProps
     >;
 
 type Props = {
@@ -155,6 +158,9 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
               return <FormBlock key={index} {...block} />;
             case "testimonials":
               return <TestimonialsBlock key={index} {...block} />;
+            case "accordion":
+              // @ts-expect-error
+              return <AccordionBlock key={index} {...block} />;
             default:
               return null;
           }

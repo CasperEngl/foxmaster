@@ -9,6 +9,7 @@ import { ContentBlock } from "@/blocks/Content/Component";
 import { FormBlock } from "@/blocks/Form/Component";
 import { MediaBlock } from "@/blocks/MediaBlock/Component";
 import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
+import { AccordionBlock } from "@/blocks/Accordion/Component";
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -17,6 +18,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   testimonials: TestimonialsBlock,
+  accordion: AccordionBlock,
 };
 
 export const RenderBlocks: React.FC<{

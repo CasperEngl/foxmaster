@@ -22,6 +22,7 @@ import {
   PreviewField,
 } from "@payloadcms/plugin-seo/fields";
 import { getServerSideURL } from "@/utilities/getURL";
+import { AccordionBlock } from "@/blocks/Accordion/config";
 
 export const Pages: CollectionConfig = {
   slug: "pages",
@@ -84,6 +85,7 @@ export const Pages: CollectionConfig = {
                 FormBlock,
                 MediaBlock,
                 TestimonialsBlock,
+                AccordionBlock,
               ],
               required: true,
             },

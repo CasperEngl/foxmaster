@@ -1,5 +1,8 @@
 import type { Block, Field } from "payload";
 
+import { FormBlock } from "@/blocks/Form/config";
+import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/config";
+import { AccordionBlock } from "@/blocks/Accordion/config";
 import {
   BlocksFeature,
   FixedToolbarFeature,
@@ -7,8 +10,6 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
-import { FormBlock } from "@/blocks/Form/config";
-import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/config";
 
 // Add background options
 const backgroundOptions = [
@@ -47,21 +48,6 @@ const columnFields: Field[] = [
     ],
   },
   {
-    name: "contentType",
-    type: "select",
-    options: [
-      {
-        label: "Rich Text",
-        value: "richText",
-      },
-      {
-        label: "Testimonials",
-        value: "testimonials",
-      },
-    ],
-    defaultValue: "richText",
-  },
-  {
     name: "richText",
     type: "richText",
     editor: lexicalEditor({
@@ -69,16 +55,15 @@ const columnFields: Field[] = [
         return [
           ...rootFeatures,
           HeadingFeature({ enabledHeadingSizes: ["h2", "h3", "h4"] }),
-          BlocksFeature({ blocks: [FormBlock, TestimonialsBlock] }),
+          BlocksFeature({
+            blocks: [FormBlock, TestimonialsBlock, AccordionBlock],
+          }),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
         ];
       },
     }),
     label: false,
-    admin: {
-      condition: (_, siblingData) => siblingData.contentType === "richText",
-    },
   },
 ];
 
