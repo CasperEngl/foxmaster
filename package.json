@@ -64,7 +64,7 @@
     "@next/eslint-plugin-next": "^13.5.7",
     "@payloadcms/eslint-config": "^1.1.1",
     "@tailwindcss/typography": "^0.5.15",
-    "@total-typescript/tsconfig": "^1.0.4",
+    "@total-typescript/ts-reset": "^0.6.1",
     "@types/escape-html": "^1.0.4",
     "@types/gsap": "^3.0.0",
     "@types/invariant": "^2.2.37",

@@ -1,5 +1,4 @@
 {
-  "extends": "@total-typescript/tsconfig/tsc/dom/app",
   "compilerOptions": {
     "baseUrl": ".",
     "esModuleInterop": true,
