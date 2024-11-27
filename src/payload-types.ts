@@ -38,7 +38,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   globals: {
     header: Header;
@@ -80,7 +80,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: number;
+  id: string;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -106,7 +106,7 @@ export interface Page {
             newTab?: boolean | null;
             reference?: {
               relationTo: 'pages';
-              value: number | Page;
+              value: string | Page;
             } | null;
             url?: string | null;
             label: string;
@@ -115,12 +115,20 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (number | null) | Media;
+    media?: (string | null) | Media;
   };
-  layout: (ArchiveBlock | CallToActionBlock | ContentBlock | FormBlock | MediaBlock | TestimonialsBlock)[];
+  layout: (
+    | ArchiveBlock
+    | CallToActionBlock
+    | ContentBlock
+    | FormBlock
+    | MediaBlock
+    | TestimonialsBlock
+    | AccordionBlock
+  )[];
   meta?: {
     title?: string | null;
-    image?: (number | null) | Media;
+    image?: (string | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -135,7 +143,7 @@ export interface Page {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt?: string | null;
   caption?: {
     root: {
@@ -236,12 +244,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (number | Category)[] | null;
+  categories?: (string | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: number | Post;
+        value: string | Post;
       }[]
     | null;
   id?: string | null;
@@ -253,12 +261,12 @@ export interface ArchiveBlock {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: number;
+  id: string;
   title: string;
-  parent?: (number | null) | Category;
+  parent?: (string | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (number | null) | Category;
+        doc?: (string | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -272,7 +280,7 @@ export interface Category {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: number;
+  id: string;
   title: string;
   content: {
     root: {
@@ -289,15 +297,15 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
+  relatedPosts?: (string | Post)[] | null;
+  categories?: (string | Category)[] | null;
   meta?: {
     title?: string | null;
-    image?: (number | null) | Media;
+    image?: (string | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (number | User)[] | null;
+  authors?: (string | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -315,7 +323,7 @@ export interface Post {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -355,7 +363,7 @@ export interface CallToActionBlock {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: number | Page;
+            value: string | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -377,7 +385,6 @@ export interface ContentBlock {
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
-        contentType?: ('richText' | 'testimonials') | null;
         richText?: {
           root: {
             type: string;
@@ -405,7 +412,7 @@ export interface ContentBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: number | Form;
+  form: string | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -431,7 +438,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: number;
+  id: string;
   title: string;
   fields?:
     | (
@@ -595,7 +602,7 @@ export interface Form {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: number | Media;
+  media: string | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -624,7 +631,7 @@ export interface TestimonialsBlock {
         };
         author: string;
         role?: string | null;
-        image: number | Media;
+        image: string | Media;
         id?: string | null;
       }[]
     | null;
@@ -634,21 +641,37 @@ export interface TestimonialsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AccordionBlock".
+ */
+export interface AccordionBlock {
+  items?:
+    | {
+        title: string;
+        content: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'accordion';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: number;
+  id: string;
   from: string;
   to?: {
     type?: ('reference' | 'custom') | null;
     reference?:
       | ({
           relationTo: 'pages';
-          value: number | Page;
+          value: string | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: number | Post;
+          value: string | Post;
         } | null);
     url?: string | null;
   };
@@ -660,8 +683,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: number;
-  form: number | Form;
+  id: string;
+  form: string | Form;
   submissionData?:
     | {
         field: string;
@@ -677,44 +700,44 @@ export interface FormSubmission {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'pages';
-        value: number | Page;
+        value: string | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: number | Post;
+        value: string | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: number | Category;
+        value: string | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: number | Redirect;
+        value: string | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: number | Form;
+        value: string | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: number | FormSubmission;
+        value: string | FormSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -724,10 +747,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -747,7 +770,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -826,7 +849,6 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     size?: T;
-                    contentType?: T;
                     richText?: T;
                     id?: T;
                   };
@@ -864,15 +886,26 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        accordion?:
+          | T
+          | {
+              items?:
+                | T
+                | {
+                    title?: T;
+                    content?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
     | {
-        overview?: T;
         title?: T;
         image?: T;
         description?: T;
-        preview?: T;
       };
   publishedAt?: T;
   slug?: T;
@@ -893,11 +926,9 @@ export interface PostsSelect<T extends boolean = true> {
   meta?:
     | T
     | {
-        overview?: T;
         title?: T;
         image?: T;
         description?: T;
-        preview?: T;
       };
   publishedAt?: T;
   authors?: T;
@@ -1231,7 +1262,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: number;
+  id: string;
   navItems?:
     | {
         link: {
@@ -1239,7 +1270,7 @@ export interface Header {
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
-            value: number | Page;
+            value: string | Page;
           } | null;
           url?: string | null;
           label: string;
@@ -1255,7 +1286,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: number;
+  id: string;
   contactInfo?: {
     root: {
       type: string;
