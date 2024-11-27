@@ -2,9 +2,10 @@
 
 import { ImageMedia } from "@/components/Media/ImageMedia";
 import RichText from "@/components/RichText";
+import { TestimonialsBlock } from "@/payload-types";
+import { cn } from "@/utilities/cn";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TestimonialsBlock } from "@/payload-types";
 
 type TestimonialCarouselProps = {
   testimonials: TestimonialsBlock["testimonials"];
@@ -160,33 +161,38 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                   {role ? <p className="text-gray-500">{role}</p> : null}
                 </div>
               </div>
-
-              <div className="mt-4 grid w-full grid-cols-4 justify-center gap-x-16 md:justify-start">
-                <div className="col-span-4 flex gap-2 md:col-span-3 md:col-start-2 md:w-2/3">
-                  {testimonials.map((_, i) => (
-                    <button
-                      key={i}
-                      className="group relative h-4 w-full md:h-2"
-                      onClick={() => update(i)}
-                    >
-                      <div className="size-full bg-gray-200 transition-all duration-150 group-hover:opacity-75" />
-                      {currentIndex === i && (
-                        <div
-                          className="absolute top-0 size-full origin-left bg-primary"
-                          style={{
-                            transform: `scaleX(${progress})`,
-                            transformOrigin: "left center",
-                          }}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </motion.article>
           );
         })}
       </AnimatePresence>
+
+      <div className="mt-4 grid w-full grid-cols-4 justify-center gap-x-16 md:justify-start">
+        <div className="col-span-4 flex gap-2 md:col-span-3 md:col-start-2 md:w-2/3">
+          {testimonials?.map((_, i) => (
+            <button
+              key={i}
+              className="group relative h-4 w-full md:h-2"
+              onClick={() => update(i)}
+            >
+              <div
+                className={cn(
+                  "size-full bg-gray-200 transition duration-300 group-hover:bg-primary",
+                )}
+              />
+              {currentIndex === i && (
+                <div
+                  data-progress={progress}
+                  className="absolute top-0 size-full origin-left scale-x-[--scaleX] bg-primary transition-opacity duration-300 group-hover:opacity-0"
+                  style={{
+                    // @ts-expect-error css variable
+                    "--scaleX": progress,
+                  }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
