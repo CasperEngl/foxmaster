@@ -1,47 +1,55 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { Header as HeaderType } from "@/payload-types";
 import { CMSLink } from "@/components/Link";
+import type { Header as HeaderType } from "@/payload-types";
 import invariant from "invariant";
+import { useEffect, useMemo, useState } from "react";
 
 export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
   const navItems = useMemo(() => header?.navItems || [], [header]);
   const [activeLink, setActiveLink] = useState<string | null>(null);
 
   useEffect(() => {
-    const sectionIds = navItems
-      .map(({ link }) => link.url?.replace("#", ""))
-      .filter(Boolean);
-    const sections = sectionIds.map((id) => {
-      invariant(id, "Section ID is required");
+    const sectionElements = navItems
+      .map(({ link }) => {
+        invariant(link.url, "Section URL is required");
 
-      return document.getElementById(id);
-    });
+        const id = link.url.replace("#", "");
+
+        return document.getElementById(id);
+      })
+      .filter(Boolean);
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleSections = entries.filter((entry) => entry.isIntersecting);
+
         if (visibleSections.length > 0) {
           const mostVisibleSection = visibleSections.reduce((prev, current) => {
-            return prev.intersectionRatio > current.intersectionRatio
-              ? prev
-              : current;
+            const isPrevMoreVisible =
+              prev.intersectionRatio > current.intersectionRatio;
+
+            return isPrevMoreVisible ? prev : current;
           });
+
           setActiveLink(`#${mostVisibleSection.target.id}`);
         }
       },
-      { threshold: [0.25, 0.5, 0.75, 1] },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5,
+      },
     );
 
-    sections.forEach((section) => {
+    for (const section of sectionElements) {
       if (section) observer.observe(section);
-    });
+    }
 
     return () => {
-      sections.forEach((section) => {
+      for (const section of sectionElements) {
         if (section) observer.unobserve(section);
-      });
+      }
     };
   }, [navItems]);
 
