@@ -2,7 +2,7 @@
 
 import type { Theme } from "@/providers/Theme/types";
 
-import React, { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import canUseDOM from "@/utilities/canUseDOM";
 
@@ -18,11 +18,11 @@ const initialContext: ContextType = {
 
 const HeaderThemeContext = createContext(initialContext);
 
-export const HeaderThemeProvider = ({
+export function HeaderThemeProvider({
   children,
 }: {
   children: React.ReactNode;
-}) => {
+}) {
   const [headerTheme, setThemeState] = useState<Theme | undefined | null>(
     canUseDOM
       ? (document.documentElement.getAttribute("data-theme") as Theme)
@@ -38,6 +38,6 @@ export const HeaderThemeProvider = ({
       {children}
     </HeaderThemeContext.Provider>
   );
-};
+}
 
-export const useHeaderTheme = (): ContextType => useContext(HeaderThemeContext);
+export const useHeaderTheme = () => useContext(HeaderThemeContext);

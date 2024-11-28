@@ -1,5 +1,4 @@
 import { cn } from "src/utilities/cn";
-import React from "react";
 
 import type { Post } from "@/payload-types";
 
@@ -9,7 +8,7 @@ export type Props = {
   posts: Post[];
 };
 
-export const CollectionArchive: React.FC<Props> = (props) => {
+export function CollectionArchive(props: Props) {
   const { posts } = props;
 
   return (
@@ -36,4 +35,4 @@ export const CollectionArchive: React.FC<Props> = (props) => {
       </div>
     </div>
   );
-};
+}

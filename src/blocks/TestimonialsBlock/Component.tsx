@@ -1,4 +1,4 @@
-import { TestimonialCarousel } from "@/components/TestimonialCarousel";
+import { TestimonialCarousel } from "@/blocks/TestimonialsBlock/testimonials-carousel";
 import type { TestimonialsBlock as TestimonialsBlockType } from "@/payload-types";
 import React from "react";
 

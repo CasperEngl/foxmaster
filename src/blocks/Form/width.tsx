@@ -1,10 +1,14 @@
-import * as React from "react";
+import { ReactNode } from "react";
 
-export const Width: React.FC<{
-  children: React.ReactNode;
+export const Width = ({
+  children,
+  className,
+  width,
+}: {
+  children: ReactNode;
   className?: string;
   width?: number | string;
-}> = ({ children, className, width }) => {
+}) => {
   return (
     <div
       className={className}

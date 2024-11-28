@@ -1,87 +1,69 @@
 "use client";
 
-import React, { Fragment, useCallback, useState } from "react";
 import { toast } from "@payloadcms/ui";
+import { useMutation } from "@tanstack/react-query";
+import { Fragment } from "react";
 
 import "./index.scss";
 
-const SuccessMessage: React.FC = () => (
-  <div>
-    Database seeded! You can now{" "}
-    <a target="_blank" href="/">
-      visit your website
-    </a>
-  </div>
-);
-
-export const SeedButton: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [seeded, setSeeded] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleClick = useCallback(
-    async (e) => {
-      e.preventDefault();
-
-      if (seeded) {
-        toast.info("Database already seeded.");
-        return;
-      }
-      if (loading) {
-        toast.info("Seeding already in progress.");
-        return;
-      }
-      if (error) {
-        toast.error(`An error occurred, please refresh and try again.`);
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        toast.promise(
-          new Promise((resolve, reject) => {
-            try {
-              fetch("/next/seed", { method: "POST", credentials: "include" })
-                .then((res) => {
-                  if (res.ok) {
-                    resolve(true);
-                    setSeeded(true);
-                  } else {
-                    reject("An error occurred while seeding.");
-                  }
-                })
-                .catch((error) => {
-                  reject(error);
-                });
-            } catch (error) {
-              reject(error);
-            }
-          }),
-          {
-            loading: "Seeding with data....",
-            success: <SuccessMessage />,
-            error: "An error occurred while seeding.",
-          },
-        );
-      } catch (err) {
-        setError(err);
-      }
-    },
-    [loading, seeded, error],
+function SuccessMessage() {
+  return (
+    <div>
+      Database seeded! You can now{" "}
+      <a target="_blank" href="/">
+        visit your website
+      </a>
+    </div>
   );
+}
+
+export function SeedButton() {
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch("/next/seed", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("An error occurred while seeding.");
+      }
+
+      return true;
+    },
+    onMutate: () => {
+      toast.info("Seeding with data....");
+    },
+    onSuccess: () => {
+      toast.success(<SuccessMessage />);
+    },
+    onError: (error: Error) => {
+      toast.error(`An error occurred: ${error.message}`);
+    },
+  });
 
   let message = "";
-  if (loading) message = " (seeding...)";
-  if (seeded) message = " (done!)";
-  if (error) message = ` (error: ${error})`;
+  if (mutation.isPending) message = " (seeding...)";
+  if (mutation.isSuccess) message = " (done!)";
+  if (mutation.isError) message = ` (error: ${mutation.error?.message})`;
 
   return (
     <Fragment>
-      <button className="seedButton" onClick={handleClick}>
+      <button
+        className="seedButton"
+        onClick={(event) => {
+          if (mutation.isPending) {
+            toast.info("Seeding already in progress.");
+          } else if (mutation.isSuccess) {
+            toast.info("Database already seeded.");
+          } else {
+            mutation.mutate();
+          }
+        }}
+      >
         Seed your database
       </button>
       {message}
     </Fragment>
   );
-};
+}

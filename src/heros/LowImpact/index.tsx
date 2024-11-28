@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 
 import type { Page } from "@/payload-types";
 
@@ -6,7 +6,7 @@ import RichText from "@/components/RichText";
 
 type LowImpactHeroType =
   | {
-      children?: React.ReactNode;
+      children?: ReactNode;
       richText?: never;
     }
   | (Omit<Page["hero"], "richText"> & {
@@ -14,10 +14,7 @@ type LowImpactHeroType =
       richText?: Page["hero"]["richText"];
     });
 
-export const LowImpactHero: React.FC<LowImpactHeroType> = ({
-  children,
-  richText,
-}) => {
+export function LowImpactHero({ children, richText }: LowImpactHeroType) {
   return (
     <div className="container mt-16">
       <div className="max-w-[48rem]">
@@ -26,4 +23,4 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
       </div>
     </div>
   );
-};
+}

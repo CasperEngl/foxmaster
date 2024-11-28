@@ -1,45 +1,47 @@
-import type { CountryField } from "@payloadcms/plugin-form-builder/types";
+import type { SelectField } from "@payloadcms/plugin-form-builder/types";
 import type { Control, FieldErrorsImpl, FieldValues } from "react-hook-form";
 
 import { Label } from "@/components/ui/label";
 import {
-  Select,
+  Select as SelectComponent,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
 import { Controller } from "react-hook-form";
 
-import { Error } from "../Error";
-import { Width } from "../Width";
-import { countryOptions } from "./options";
+import { Error } from "@/blocks/Form/error";
+import { Width } from "./width";
 
-export const Country: React.FC<
-  CountryField & {
-    control: Control<FieldValues, any>;
-    errors: Partial<
-      FieldErrorsImpl<{
-        [x: string]: any;
-      }>
-    >;
-  }
-> = ({ name, control, errors, label, required, width }) => {
+export const Select = ({
+  name,
+  control,
+  errors,
+  label,
+  options,
+  required,
+  width,
+}: SelectField & {
+  control: Control<FieldValues, any>;
+  errors: Partial<
+    FieldErrorsImpl<{
+      [x: string]: any;
+    }>
+  >;
+}) => {
   return (
     <Width width={width}>
-      <Label className="" htmlFor={name}>
-        {label}
-      </Label>
+      <Label htmlFor={name}>{label}</Label>
       <Controller
         control={control}
         defaultValue=""
         name={name}
         render={({ field: { onChange, value } }) => {
-          const controlledValue = countryOptions.find((t) => t.value === value);
+          const controlledValue = options.find((t) => t.value === value);
 
           return (
-            <Select
+            <SelectComponent
               onValueChange={(val) => onChange(val)}
               value={controlledValue?.value}
             >
@@ -47,7 +49,7 @@ export const Country: React.FC<
                 <SelectValue placeholder={label} />
               </SelectTrigger>
               <SelectContent>
-                {countryOptions.map(({ label, value }) => {
+                {options.map(({ label, value }) => {
                   return (
                     <SelectItem key={value} value={value}>
                       {label}
@@ -55,7 +57,7 @@ export const Country: React.FC<
                   );
                 })}
               </SelectContent>
-            </Select>
+            </SelectComponent>
           );
         }}
         rules={{ required }}

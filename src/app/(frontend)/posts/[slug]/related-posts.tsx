@@ -1,10 +1,9 @@
-import clsx from "clsx";
-import React from "react";
 import RichText from "@/components/RichText";
+import clsx from "clsx";
 
 import type { Post } from "@/payload-types";
 
-import { Card } from "../../components/Card";
+import { Card } from "../../../../components/Card";
 
 export type RelatedPostsProps = {
   className?: string;
@@ -12,9 +11,11 @@ export type RelatedPostsProps = {
   introContent?: any;
 };
 
-export const RelatedPosts: React.FC<RelatedPostsProps> = (props) => {
-  const { className, docs, introContent } = props;
-
+export function RelatedPosts({
+  className,
+  docs,
+  introContent,
+}: RelatedPostsProps) {
   return (
     <div className={clsx("container", className)}>
       {introContent && <RichText content={introContent} enableGutter={false} />}
@@ -30,4 +31,4 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = (props) => {
       </div>
     </div>
   );
-};
+}

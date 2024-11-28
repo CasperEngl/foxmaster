@@ -1,6 +1,6 @@
 import RichText from "@/components/RichText";
 
-import { Width } from "../Width";
+import { Width } from "./width";
 
 export const Message = ({ message }: { message: Record<string, any> }) => {
   return (

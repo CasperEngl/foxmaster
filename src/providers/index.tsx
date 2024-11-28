@@ -5,7 +5,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import React from "react";
 import { HeaderThemeProvider } from "./HeaderTheme";
 import { ThemeProvider } from "./Theme";
 
@@ -17,9 +16,7 @@ const queryClient = new QueryClient({
   }),
 });
 
-export const Providers: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -27,4 +24,4 @@ export const Providers: React.FC<{
       </ThemeProvider>
     </QueryClientProvider>
   );
-};
+}

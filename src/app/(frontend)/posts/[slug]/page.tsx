@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 
-import { RelatedPosts } from "@/blocks/RelatedPosts/Component";
+import { RelatedPosts } from "@/app/(frontend)/posts/[slug]/related-posts";
 import { PayloadRedirects } from "@/components/PayloadRedirects";
-import configPromise from "@payload-config";
-import { getPayload } from "payload";
-import { draftMode } from "next/headers";
-import React, { cache } from "react";
 import RichText from "@/components/RichText";
+import configPromise from "@payload-config";
+import { draftMode } from "next/headers";
+import { getPayload } from "payload";
+import { cache } from "react";
 
-import type { Post } from "@/payload-types";
 
 import { PostHero } from "@/heros/PostHero";
 import { generateMeta } from "@/utilities/generateMeta";

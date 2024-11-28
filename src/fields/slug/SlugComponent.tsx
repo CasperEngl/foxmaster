@@ -1,14 +1,14 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
 import { TextFieldClientProps } from "payload";
+import { useCallback, useEffect } from "react";
 
 import {
-  useField,
   Button,
-  TextInput,
   FieldLabel,
-  useFormFields,
+  TextInput,
+  useField,
   useForm,
+  useFormFields,
 } from "@payloadcms/ui";
 
 import { formatSlug } from "./formatSlug";
@@ -19,13 +19,13 @@ type SlugComponentProps = {
   checkboxFieldPath: string;
 } & TextFieldClientProps;
 
-export const SlugComponent: React.FC<SlugComponentProps> = ({
+export function SlugComponent({
   field,
   fieldToUse,
   checkboxFieldPath: checkboxFieldPathFromProps,
   path,
   readOnly: readOnlyFromProps,
-}) => {
+}: SlugComponentProps) {
   const { label } = field;
 
   const checkboxFieldPath = path?.includes(".")
@@ -59,19 +59,6 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
     }
   }, [targetFieldValue, checkboxValue, setValue, value]);
 
-  const handleLock = useCallback(
-    (e) => {
-      e.preventDefault();
-
-      dispatchFields({
-        type: "UPDATE",
-        path: checkboxFieldPath,
-        value: !checkboxValue,
-      });
-    },
-    [checkboxValue, checkboxFieldPath, dispatchFields],
-  );
-
   const readOnly = readOnlyFromProps || checkboxValue;
 
   return (
@@ -79,7 +66,19 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
       <div className="label-wrapper">
         <FieldLabel htmlFor={`field-${path}`} label={label} />
 
-        <Button className="lock-button" buttonStyle="none" onClick={handleLock}>
+        <Button
+          className="lock-button"
+          buttonStyle="none"
+          onClick={(event) => {
+            event.preventDefault();
+
+            dispatchFields({
+              type: "UPDATE",
+              path: checkboxFieldPath,
+              value: !checkboxValue,
+            });
+          }}
+        >
           {checkboxValue ? "Unlock" : "Lock"}
         </Button>
       </div>
@@ -92,4 +91,4 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
       />
     </div>
   );
-};
+}

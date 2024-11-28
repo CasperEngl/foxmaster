@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
 import type { Props } from "./types";
 
 import { ImageMedia } from "./ImageMedia";
 import { VideoMedia } from "./VideoMedia";
 
-export const Media: React.FC<Props> = (props) => {
+export function Media(props: Props) {
   const { className, htmlElement = "div", resource } = props;
 
   const isVideo =
@@ -23,4 +23,4 @@ export const Media: React.FC<Props> = (props) => {
       {isVideo ? <VideoMedia {...props} /> : <ImageMedia {...props} />}
     </Tag>
   );
-};
+}

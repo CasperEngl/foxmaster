@@ -14,6 +14,7 @@ import { image2 } from "./image-2";
 import { post1 } from "./post-1";
 import { post2 } from "./post-2";
 import { post3 } from "./post-3";
+import { Form, Page, Post } from "@/payload-types";
 
 const collections: CollectionSlug[] = [
   "categories",
@@ -31,7 +32,6 @@ const globals: GlobalSlug[] = ["header", "footer"];
 // These error messages can be ignored: `Error hitting revalidate route for...`
 export const seed = async ({
   payload,
-  req,
 }: {
   payload: Payload;
   req: PayloadRequest;
@@ -65,7 +65,7 @@ export const seed = async ({
     });
   }
 
-  const pages = await payload.delete({
+  await payload.delete({
     collection: "pages",
     where: {},
   });
@@ -197,7 +197,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image1ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
+    ) as Post,
   });
 
   const post2Doc = await payload.create({
@@ -207,7 +207,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image2ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image3ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
+    ) as Post,
   });
 
   const post3Doc = await payload.create({
@@ -217,7 +217,7 @@ export const seed = async ({
         .replace(/"\{\{IMAGE_1\}\}"/g, String(image3ID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image1ID))
         .replace(/"\{\{AUTHOR\}\}"/g, String(demoAuthorID)),
-    ),
+    ) as Post,
   });
 
   // update each post with related posts
@@ -251,14 +251,14 @@ export const seed = async ({
       JSON.stringify(home)
         .replace(/"\{\{IMAGE_1\}\}"/g, String(imageHomeID))
         .replace(/"\{\{IMAGE_2\}\}"/g, String(image2ID)),
-    ),
+    ) as Page,
   });
 
   payload.logger.info(`— Seeding contact form...`);
 
   const contactForm = await payload.create({
     collection: "forms",
-    data: JSON.parse(JSON.stringify(contactFormData)),
+    data: JSON.parse(JSON.stringify(contactFormData)) as Form,
   });
 
   let contactFormID: number | string = contactForm.id;
@@ -276,7 +276,7 @@ export const seed = async ({
         /"\{\{CONTACT_FORM_ID\}\}"/g,
         String(contactFormID),
       ),
-    ),
+    ) as Page,
   });
 
   payload.logger.info(`— Seeding header...`);

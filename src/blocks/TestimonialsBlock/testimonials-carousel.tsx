@@ -28,9 +28,9 @@ const slideVariants = {
   }),
 };
 
-export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
+export function TestimonialCarousel({
   testimonials,
-}) => {
+}: TestimonialCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState(0);
@@ -195,7 +195,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
       </div>
     </section>
   );
-};
+}
 
 const QuoteIcon = () => (
   <svg

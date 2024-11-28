@@ -2,20 +2,20 @@
 import { cn } from "@/utilities/cn";
 import useClickableCard from "@/utilities/useClickableCard";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
 import type { Post } from "@/payload-types";
 
 import { Media } from "@/components/Media";
 
-export const Card: React.FC<{
+export function Card(props: {
   alignItems?: "center";
   className?: string;
   doc?: Post;
   relationTo?: "posts";
   showCategories?: boolean;
   title?: string;
-}> = (props) => {
+}) {
   const { card, link } = useClickableCard({});
   const {
     className,
@@ -93,4 +93,4 @@ export const Card: React.FC<{
       </div>
     </article>
   );
-};
+}

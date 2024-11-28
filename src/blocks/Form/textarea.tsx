@@ -5,39 +5,41 @@ import type {
   UseFormRegister,
 } from "react-hook-form";
 
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import { Textarea as TextAreaComponent } from "@/components/ui/textarea";
 
-import { Error } from "../Error";
-import { Width } from "../Width";
-export const Number: React.FC<
-  TextField & {
-    errors: Partial<
-      FieldErrorsImpl<{
-        [x: string]: any;
-      }>
-    >;
-    register: UseFormRegister<FieldValues>;
-  }
-> = ({
+import { Error } from "./error";
+import { Width } from "./width";
+
+export const Textarea = ({
   name,
   defaultValue,
   errors,
   label,
   register,
   required: requiredFromProps,
+  rows = 3,
   width,
+}: TextField & {
+  errors: Partial<
+    FieldErrorsImpl<{
+      [x: string]: any;
+    }>
+  >;
+  register: UseFormRegister<FieldValues>;
+  rows?: number;
 }) => {
   return (
     <Width width={width}>
       <Label htmlFor={name}>{label}</Label>
-      <Input
+
+      <TextAreaComponent
         defaultValue={defaultValue}
         id={name}
-        type="number"
+        rows={rows}
         {...register(name, { required: requiredFromProps })}
       />
+
       {requiredFromProps && errors[name] && <Error />}
     </Width>
   );

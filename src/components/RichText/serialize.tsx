@@ -8,7 +8,7 @@ import {
   DefaultNodeTypes,
   SerializedBlockNode,
 } from "@payloadcms/richtext-lexical";
-import React, { Fragment, JSX } from "react";
+import { Fragment, JSX } from "react";
 
 import { FormBlock } from "@/blocks/Form/Component";
 import { TestimonialsBlock } from "@/blocks/TestimonialsBlock/Component";
@@ -56,7 +56,7 @@ export function serializeLexical({ nodes }: Props): JSX.Element {
         }
 
         if (node.type === "text") {
-          let text = <React.Fragment key={index}>{node.text}</React.Fragment>;
+          let text = <Fragment key={index}>{node.text}</Fragment>;
           if (node.format & IS_BOLD) {
             text = <strong key={index}>{text}</strong>;
           }

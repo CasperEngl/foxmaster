@@ -5,7 +5,7 @@ import type { Header as HeaderType } from "@/payload-types";
 import invariant from "invariant";
 import { useEffect, useMemo, useState } from "react";
 
-export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
+export function HeaderNav({ header }: { header: HeaderType }) {
   const navItems = useMemo(() => header?.navItems || [], [header]);
   const [activeLink, setActiveLink] = useState<string | null>(null);
 
@@ -64,4 +64,4 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
       })}
     </nav>
   );
-};
+}

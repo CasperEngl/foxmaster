@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
+import { z } from "zod";
 import { PayloadRedirects } from "@/components/PayloadRedirects";
-import configPromise from "@payload-config";
-import { getPayload } from "payload";
-import { draftMode } from "next/headers";
-import React, { cache } from "react";
 import { homeStatic } from "@/endpoints/seed/home-static";
+import configPromise from "@payload-config";
+import { draftMode } from "next/headers";
+import { getPayload } from "payload";
+import { cache } from "react";
 
 import type { Page as PageType } from "@/payload-types";
 
@@ -13,6 +14,7 @@ import { RenderBlocks } from "@/blocks/RenderBlocks";
 import { RenderHero } from "@/heros/RenderHero";
 import { generateMeta } from "@/utilities/generateMeta";
 import PageClient from "./page.client";
+import { PageProps } from "@/next";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise });
@@ -77,9 +79,11 @@ export default async function Page({ params: paramsPromise }: Args) {
 }
 
 export async function generateMetadata({
-  params: paramsPromise,
-}): Promise<Metadata> {
-  const { slug = "home" } = await paramsPromise;
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug = "home" } = z
+    .object({ slug: z.string().optional() })
+    .parse(await params);
   const page = await queryPageBySlug({
     slug,
   });

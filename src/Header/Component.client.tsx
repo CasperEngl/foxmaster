@@ -2,19 +2,18 @@
 import { useHeaderTheme } from "@/providers/HeaderTheme";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Header } from "@/payload-types";
 
 import { Logo } from "@/components/Logo/Logo";
 import { HeaderNav } from "./Nav";
-import { cn } from "@/utilities/cn";
 
 interface HeaderClientProps {
   header: Header;
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
+export function HeaderClient({ header }: HeaderClientProps) {
   const [theme, setTheme] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const { headerTheme, setHeaderTheme } = useHeaderTheme();
@@ -59,4 +58,4 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ header }) => {
       </div>
     </header>
   );
-};
+}

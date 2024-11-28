@@ -3,10 +3,9 @@
 import type { PayloadAdminBarProps } from "payload-admin-bar";
 
 import { cn } from "@/utilities/cn";
-import { useSelectedLayoutSegments } from "next/navigation";
+import { useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { PayloadAdminBar } from "payload-admin-bar";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import "./index.scss";
 
@@ -29,22 +28,14 @@ const collectionLabels = {
   },
 };
 
-const Title: React.FC = () => <span>Dashboard</span>;
-
-export const AdminBar: React.FC<{
-  adminBarProps?: PayloadAdminBarProps;
-}> = (props) => {
+export function AdminBar(props: { adminBarProps?: PayloadAdminBarProps }) {
   const { adminBarProps } = props || {};
-  const segments = useSelectedLayoutSegments();
+  const segments = useSelectedLayoutSegments() as Array<
+    keyof typeof collectionLabels
+  >;
   const [show, setShow] = useState(false);
-  const collection = collectionLabels?.[segments?.[1]]
-    ? segments?.[1]
-    : "pages";
+  const collection = collectionLabels[segments?.[1]] ? segments?.[1] : "pages";
   const router = useRouter();
-
-  const onAuthChange = React.useCallback((user) => {
-    setShow(user?.id);
-  }, []);
 
   return (
     <div
@@ -68,8 +59,10 @@ export const AdminBar: React.FC<{
             plural: collectionLabels[collection]?.plural || "Pages",
             singular: collectionLabels[collection]?.singular || "Page",
           }}
-          logo={<Title />}
-          onAuthChange={onAuthChange}
+          logo={<span>Dashboard</span>}
+          onAuthChange={(user) => {
+            setShow(!!user?.id);
+          }}
           onPreviewExit={() => {
             fetch("/next/exit-preview").then(() => {
               router.push("/");
@@ -86,4 +79,4 @@ export const AdminBar: React.FC<{
       </div>
     </div>
   );
-};
+}

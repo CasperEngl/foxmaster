@@ -1,18 +1,17 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { cn } from "src/utilities/cn";
-import React, { useEffect, useRef } from "react";
 
 import type { Props as MediaProps } from "../types";
 
 import { getClientSideURL } from "@/utilities/getURL";
 
-export const VideoMedia: React.FC<MediaProps> = (props) => {
+export function VideoMedia(props: MediaProps) {
   const { onClick, resource, videoClassName } = props;
 
   const videoRef = useRef<HTMLVideoElement>(null);
   // const [showFallback] = useState<boolean>()
-
   useEffect(() => {
     const { current: video } = videoRef;
     if (video) {
@@ -43,4 +42,4 @@ export const VideoMedia: React.FC<MediaProps> = (props) => {
   }
 
   return null;
-};
+}

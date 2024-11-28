@@ -1,13 +1,13 @@
 import { Button, type ButtonProps } from "@/components/ui/button";
 import Link from "next/link";
-import React from "react";
+import { ReactNode } from "react";
 import { cn } from "src/utilities/cn";
 
 import type { Page, Post } from "@/payload-types";
 
 type CMSLinkType = {
   appearance?: "inline" | ButtonProps["variant"];
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
   label?: string | null;
   newTab?: boolean | null;
@@ -20,27 +20,23 @@ type CMSLinkType = {
   url?: string | null;
 };
 
-export const CMSLink: React.FC<CMSLinkType> = (props) => {
-  const {
-    type,
-    appearance = "inline",
-    children,
-    className,
-    label,
-    newTab,
-    reference,
-    size: sizeFromProps,
-    url,
-    ...rest
-  } = props;
-
+export function CMSLink({
+  type,
+  appearance = "inline",
+  children,
+  className,
+  label,
+  newTab,
+  reference,
+  size: sizeFromProps,
+  url,
+  ...rest
+}: CMSLinkType) {
   const href =
     type === "reference" &&
     typeof reference?.value === "object" &&
     reference.value.slug
-      ? `${reference?.relationTo !== "pages" ? `/${reference?.relationTo}` : ""}/${
-          reference.value.slug
-        }`
+      ? `${reference?.relationTo !== "pages" ? `/${reference?.relationTo}` : ""}/${reference.value.slug}`
       : url;
 
   if (!href) return null;
@@ -78,4 +74,4 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
       </Link>
     </Button>
   );
-};
+}

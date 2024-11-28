@@ -2,15 +2,15 @@
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
 import config from "@payload-config";
 import "@payloadcms/next/css";
-import type { ServerFunctionClient } from "payload";
 import { handleServerFunctions, RootLayout } from "@payloadcms/next/layouts";
-import React from "react";
+import type { ServerFunctionClient } from "payload";
+import { ReactNode } from "react";
 
 import { importMap } from "./admin/importMap.js";
 import "./custom.scss";
 
 type Args = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const serverFunction: ServerFunctionClient = async function (args) {

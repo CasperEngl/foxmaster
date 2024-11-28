@@ -31,26 +31,13 @@ export type FormBlockType = {
   }[];
 };
 
-export const FormBlock: React.FC<
-  {
+export function FormBlock(
+  props: {
     id?: string;
-  } & FormBlockType
-> = (props) => {
-  const {
-    enableIntro,
-    form: formFromProps,
-    form: {
-      id: formID,
-      confirmationMessage,
-      confirmationType,
-      redirect,
-      submitButtonLabel,
-    } = {},
-    introContent,
-  } = props;
-
+  } & FormBlockType,
+) {
   const form = useForm({
-    defaultValues: buildInitialFormState(formFromProps.fields),
+    defaultValues: buildInitialFormState(props.form.fields),
   });
 
   const router = useRouter();
@@ -64,7 +51,7 @@ export const FormBlock: React.FC<
 
       const req = await fetch(`${getClientSideURL()}/api/form-submissions`, {
         body: JSON.stringify({
-          form: formID,
+          form: props.form.id,
           submissionData: dataToSend,
         }),
         headers: {
@@ -82,70 +69,77 @@ export const FormBlock: React.FC<
       return res;
     },
     onSuccess: () => {
-      if (confirmationType === "redirect" && redirect) {
-        const { url } = redirect;
-        if (url) router.push(url);
+      if (props.form.confirmationType === "redirect" && props.form.redirect) {
+        if (props.form.redirect.url) router.push(props.form.redirect.url);
       }
     },
   });
 
   return (
     <div className="">
-      {enableIntro && introContent && !form.formState.isSubmitted && (
-        <RichText
-          className="mb-8 lg:mb-12"
-          content={introContent}
-          enableGutter={false}
-        />
-      )}
+      {props.enableIntro &&
+        props.introContent &&
+        !form.formState.isSubmitted && (
+          <RichText
+            className="mb-8 lg:mb-12"
+            content={props.introContent}
+            enableGutter={false}
+          />
+        )}
       <FormProvider {...form}>
         {!form.formState.isSubmitSuccessful ? (
           <form
-            id={formID}
+            id={props.form.id}
             onSubmit={form.handleSubmit(async (values) => {
               await mutation.mutateAsync(values);
             })}
           >
             <fieldset disabled={form.formState.isSubmitting}>
               <div className="mb-4 last:mb-0">
-                {formFromProps &&
-                  formFromProps.fields &&
-                  formFromProps.fields?.map((field, index) => {
-                    const Field: React.FC<any> = fields?.[field.blockType];
-                    if (Field) {
-                      return (
-                        <div className="mb-6 last:mb-0" key={index}>
-                          <Field
-                            form={formFromProps}
-                            {...field}
-                            {...form}
-                            control={form.control}
-                            errors={form.formState.errors}
-                            register={form.register}
-                          />
-                        </div>
-                      );
-                    }
+                {props.form.fields?.map((field, index) => {
+                  const Field = field.blockType
+                    ? fields?.[field.blockType]
+                    : null;
+
+                  if (!Field) {
                     return null;
-                  })}
+                  }
+
+                  return (
+                    <div className="mb-6 last:mb-0" key={index}>
+                      <Field
+                        // @ts-expect-error - Field is not typed
+                        form={props.form}
+                        {...field}
+                        {...form}
+                        // @ts-expect-error - Field is not typed
+                        control={form.control}
+                        // @ts-expect-error - Field is not typed
+                        errors={form.formState.errors}
+                        // @ts-expect-error - Field is not typed
+                        register={form.register}
+                      />
+                    </div>
+                  );
+                })}
               </div>
 
               <Button
-                form={formID}
+                form={props.form.id}
                 type="submit"
                 variant="glassmorphic"
                 size="glassmorphic"
                 className="bg-background text-foreground"
                 disabled={mutation.isPending}
               >
-                {submitButtonLabel}
+                {props.form.submitButtonLabel}
               </Button>
             </fieldset>
           </form>
         ) : form.formState.isSubmitSuccessful &&
-          confirmationType === "message" ? (
+          props.form.confirmationType === "message" ? (
           <RichText
-            content={confirmationMessage}
+            content={props.form.confirmationMessage}
             enableProse={false}
             enableGutter={false}
           />
@@ -157,4 +151,4 @@ export const FormBlock: React.FC<
       </FormProvider>
     </div>
   );
-};
+}

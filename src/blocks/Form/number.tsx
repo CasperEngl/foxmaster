@@ -1,4 +1,4 @@
-import type { EmailField } from "@payloadcms/plugin-form-builder/types";
+import type { TextField } from "@payloadcms/plugin-form-builder/types";
 import type {
   FieldErrorsImpl,
   FieldValues,
@@ -7,21 +7,11 @@ import type {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
 
-import { Error } from "../Error";
-import { Width } from "../Width";
+import { Error } from "@/blocks/Form/error";
+import { Width } from "./width";
 
-export const Email: React.FC<
-  EmailField & {
-    errors: Partial<
-      FieldErrorsImpl<{
-        [x: string]: any;
-      }>
-    >;
-    register: UseFormRegister<FieldValues>;
-  }
-> = ({
+export const Number = ({
   name,
   defaultValue,
   errors,
@@ -29,6 +19,13 @@ export const Email: React.FC<
   register,
   required: requiredFromProps,
   width,
+}: TextField & {
+  errors: Partial<
+    FieldErrorsImpl<{
+      [x: string]: any;
+    }>
+  >;
+  register: UseFormRegister<FieldValues>;
 }) => {
   return (
     <Width width={width}>
@@ -36,13 +33,9 @@ export const Email: React.FC<
       <Input
         defaultValue={defaultValue}
         id={name}
-        type="text"
-        {...register(name, {
-          pattern: /^\S[^\s@]*@\S+$/,
-          required: requiredFromProps,
-        })}
+        type="number"
+        {...register(name, { required: requiredFromProps })}
       />
-
       {requiredFromProps && errors[name] && <Error />}
     </Width>
   );

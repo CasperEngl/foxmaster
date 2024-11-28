@@ -1,4 +1,3 @@
-import type React from "react";
 import type { Page, Post } from "@/payload-types";
 
 import { getCachedDocument } from "@/utilities/getDocument";
@@ -11,10 +10,7 @@ interface Props {
 }
 
 /* This component helps us with SSR based dynamic redirects */
-export const PayloadRedirects: React.FC<Props> = async ({
-  disableNotFound,
-  url,
-}) => {
+export async function PayloadRedirects({ disableNotFound, url }: Props) {
   const slug = url.startsWith("/") ? url : `${url}`;
 
   const redirects = await getCachedRedirects()();
@@ -35,9 +31,7 @@ export const PayloadRedirects: React.FC<Props> = async ({
       const document = (await getCachedDocument(collection, id)()) as
         | Page
         | Post;
-      redirectUrl = `${redirectItem.to?.reference?.relationTo !== "pages" ? `/${redirectItem.to?.reference?.relationTo}` : ""}/${
-        document?.slug
-      }`;
+      redirectUrl = `${redirectItem.to?.reference?.relationTo !== "pages" ? `/${redirectItem.to?.reference?.relationTo}` : ""}/${document?.slug}`;
     } else {
       redirectUrl = `${redirectItem.to?.reference?.relationTo !== "pages" ? `/${redirectItem.to?.reference?.relationTo}` : ""}/${
         typeof redirectItem.to?.reference?.value === "object"
@@ -52,4 +46,4 @@ export const PayloadRedirects: React.FC<Props> = async ({
   if (disableNotFound) return null;
 
   notFound();
-};
+}

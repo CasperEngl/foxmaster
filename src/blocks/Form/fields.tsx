@@ -1,12 +1,12 @@
-import { Checkbox } from "./Checkbox";
-import { Country } from "./Country";
-import { Email } from "./Email";
-import { Message } from "./Message";
-import { Number } from "./Number";
-import { Select } from "./Select";
-import { State } from "./State";
-import { Text } from "./Text";
-import { Textarea } from "./Textarea";
+import { Checkbox } from "@/blocks/Form/checkbox";
+import { Country } from "@/blocks/Form/country";
+import { Email } from "@/blocks/Form/email";
+import { Message } from "@/blocks/Form/message";
+import { Number } from "@/blocks/Form/number";
+import { Select } from "@/blocks/Form/select";
+import { State } from "@/blocks/Form/state";
+import { Text } from "@/blocks/Form/text";
+import { Textarea } from "@/blocks/Form/textarea";
 
 export const fields = {
   checkbox: Checkbox,
@@ -18,4 +18,5 @@ export const fields = {
   state: State,
   text: Text,
   textarea: Textarea,
-};
+  payment: null,
+} as const;
