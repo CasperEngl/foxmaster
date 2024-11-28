@@ -6,6 +6,7 @@ import { TestimonialsBlock } from "@/payload-types";
 import { cn } from "@/utilities/cn";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useIntersection } from "react-use";
 
 type TestimonialCarouselProps = {
   testimonials: TestimonialsBlock["testimonials"];
@@ -38,14 +39,16 @@ export function TestimonialCarousel({
   const SLIDE_DURATION = 5000;
   const animationFrameRef = useRef<number>(-1);
   const lastTimeRef = useRef<number>(-1);
-
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-  };
+  const carouselRef = useRef<HTMLElement>(null);
+  const intersection = useIntersection(
+    // @ts-expect-error
+    carouselRef,
+    {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1,
+    },
+  );
 
   const update = useCallback(
     (index: number) => {
@@ -99,11 +102,21 @@ export function TestimonialCarousel({
     };
   }, [currentIndex, isPaused, testimonials?.length, update]);
 
+  useEffect(() => {
+    setIsPaused(!intersection?.isIntersecting);
+  }, [intersection?.isIntersecting]);
+
   return (
     <section
+      ref={carouselRef}
       className="relative flex flex-wrap"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => {
+        setIsPaused(true);
+        setProgress(0);
+      }}
+      onMouseLeave={() => {
+        setIsPaused(false);
+      }}
     >
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         {testimonials?.map((testimonial, index) => {
