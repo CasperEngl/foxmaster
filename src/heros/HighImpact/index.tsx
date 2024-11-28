@@ -18,10 +18,10 @@ export function HighImpactHero({ links, media, richText }: Page["hero"]) {
   return (
     <div
       id="hero"
-      className="relative -mt-48 flex items-center justify-center text-white sm:-mt-[10.125rem]"
+      className="relative -mt-48 flex min-h-[100vh] items-center justify-center text-white sm:-mt-[10.125rem]"
       data-theme="dark"
     >
-      <div className="container mb-8">
+      <div className="container">
         <div className="max-w-prose text-pretty">
           {richText && (
             <RichText
